@@ -92,18 +92,24 @@ function draw() {
         0,0,
         canvas.width,
         canvas.height);
+
     lines.forEach(line => {
+
         if (
             line === lines[lines.length - 1]
             && drawing
-        ) {line.angle += 0.1;
+        ) {
+            line.angle += 0.1;
             line.radius += speed;
+
             let x =
                 line.x +
                 Math.cos(line.angle) * line.radius;
+
             let y =
                 line.y +
                 Math.sin(line.angle) * line.radius;
+
             line.points.push({
                 x: x,
                 y: y
@@ -113,16 +119,31 @@ function draw() {
         if (
             line !== lines[lines.length - 1]
             || !drawing
-        ) {line.rotation += rotationSpeed;}
+        ) {
+            line.rotation += rotationSpeed;
+        }
+
+        if (line.radius > 0) {
+            ctx.fillStyle = "black";
+            ctx.beginPath();
+            ctx.arc(
+                line.x,
+                line.y,
+                line.radius,
+                0,
+                Math.PI * 2
+            );
+            ctx.fill();
+        }
 
         ctx.strokeStyle = line.color;
         ctx.lineWidth = 3;
         ctx.beginPath();
+
         line.points.forEach((point, i) => {
 
             let dx = point.x - line.x;
             let dy = point.y - line.y;
-
 
             let x =
                 line.x +
@@ -134,21 +155,20 @@ function draw() {
                 dx * Math.sin(line.rotation) +
                 dy * Math.cos(line.rotation);
 
-
             if (i === 0) {
-
                 ctx.moveTo(x, y);
-
             } else {
-
                 ctx.lineTo(x, y);
-
             }
         });
+
         ctx.stroke();
     });
+
     requestAnimationFrame(draw);}
+
 draw();
+
 window.addEventListener("resize", function() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
